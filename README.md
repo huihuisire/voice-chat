@@ -22,7 +22,7 @@
 - Spring Boot 3.2+
 
 ### 配置
-
+- 在阿里云百炼平台设置api-key
 在 `application.yml` 中配置以下参数：
 
 ```yaml
@@ -32,7 +32,7 @@ spring:
       api-key: your-api-key-here
 
 server:
-  port: 8080
+  port: 9533
 ```
 
 ### 运行项目
@@ -40,7 +40,7 @@ server:
 1. 使用IDEA打开项目
 2. 等待Maven下载依赖
 3. 运行 `VoiceChatApplication` 主类
-4. 访问 `http://localhost:8080` 即可使用语音对话系统
+4. 访问 `http://localhost:9533` 即可使用语音对话系统
 
 ## 🎮 使用方式
 
@@ -50,6 +50,16 @@ server:
 - 智能对话
 - 语音合成播放
 - 对话历史记录
+
+## 📱手机使用
+
+- 确保手机与后端服务在同一局域网（比如连同一个WiFi）
+- 修改index.html中后端url为局域网地址
+
+
+## ！注意
+- 页面目前使用HTTP方式，只有localhost访问时才能获取麦克风权限
+- 使用IP地址访问时，要么部署https方式，要么跳过安全控制（浏览器自行搜索http方式获取麦克风权限）
 
 ## 🏗️ 系统架构
 
@@ -65,6 +75,9 @@ server:
 │  (TTS)      │     │  (LLM)      │     │  (ASR)      │
 └─────────────┘     └─────────────┘     └─────────────┘
 ```
+
+## RAG
+- 项目中能快速使用阿里云知识库，快速实现RAG
 
 ## 🔧 技术栈
 
