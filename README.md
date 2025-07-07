@@ -3,7 +3,7 @@
 一个基于Spring Boot的实时语音对话系统，集成了阿里云语音识别(ASR)、通义千问大语言模型和语音合成(TTS)服务。
 
 <video width="520" height="340" controls>
-    <source src="https://www.bilibili.com/video/BV1Yz32zaEhM/" type="video/mp4">
+    <source src="https://github.com/user-attachments/assets/4b6a6360-b420-449b-87a2-27a4a87dc9f7" type="video/mp4">
 </video>
 
 ## ✨ 特性
