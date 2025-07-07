@@ -1,0 +1,25 @@
+server:
+  port: 9533
+
+spring:
+  ai:
+    dashscope:
+      api-key: your-api-key
+      chat:
+        options:
+          model: qwen-plus
+      audio:
+        synthesis:
+          options:
+            model: cosyvoice-v1
+            response-format: mp3
+            voice: longwan
+            speed: 0.9
+  application:
+    name: voice-chat4j
+
+
+logging:
+  level:
+    com.xc.voicechat4j: INFO
+    org.springframework.web: INFO

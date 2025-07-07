@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哟呵</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23007AFF' d='M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z'/></svg>">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #222;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+        .bg-blur {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0;
+            background: url('avatar.png') center/cover no-repeat;
+            filter: blur(32px) brightness(0.7);
+            width: 100vw; height: 100vh;
+        }
+        .main-content {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            max-width: 600px;
+            width: 100%;
+        }
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 24px 20px 0 20px;
+            gap: 18px;
+            box-sizing: border-box;
+        }
+        .top-bar .icon-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .top-bar .icon-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        .top-bar .icon-btn:active {
+            transform: scale(0.95);
+        }
+        .top-bar .icon-btn.active {
+            background: rgba(0,234,255,0.25);
+        }
+        .top-bar .icon-btn.active svg {
+            filter: drop-shadow(0 0 8px rgba(0,234,255,0.5));
+        }
+        .top-bar .icon-btn svg {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .top-bar .icon-btn:hover svg {
+            transform: scale(1.1);
+        }
+        .avatar-section {
+            position: absolute;
+            top: 18%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0;
+            width: 100%;
+            pointer-events: none;
+        }
+        .avatar-center, .nickname {
+            pointer-events: auto;
+        }
+        .avatar-center {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.25);
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .avatar-center img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .nickname {
+            margin-top: 16px;
+            color: #fff;
+            font-size: 1.2rem;
+            background: none;
+            border: none;
+            text-align: center;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 15px;
+            transition: background-color 0.2s;
+        }
+        .nickname:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .nickname:focus {
+            outline: none;
+            background: rgba(255,255,255,0.15);
+        }
+        .subtitle-area {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 32%;
+            min-height: 60px;
+            width: calc(100% - 48px);
+            max-width: 500px;
+            padding: 18px 28px;
+            border-radius: 18px;
+            background: rgba(0,0,0,0.25);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 500;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            display: none;
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(.4,2,.6,1);
+            z-index: 20;
+        }
+        .subtitle-area.on {
+            display: block;
+            opacity: 1;
+            transform: translateX(-50%) scale(1.04);
+        }
+        .subtitle-user {
+            color: #00eaff;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .subtitle-ai {
+            color: #ffd700;
+            display: block;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .subtitle-user:before {
+            content: '你：';
+            opacity: 0.6;
+            font-size: 0.9em;
+            margin-right: 8px;
+        }
+        .subtitle-ai:before {
+            content: 'AI：';
+            opacity: 0.6;
+            font-size: 0.9em;
+            margin-right: 8px;
+        }
+        .bottom-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 48px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            transition: transform 0.15s;
+        }
+        .action-btn:active {
+            transform: scale(0.92);
+        }
+        .action-btn svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 6px;
+        }
+        .action-label {
+            color: #fff;
+            font-size: 1rem;
+            text-shadow: 0 1px 4px #0008;
+        }
+        @media (max-width: 600px) {
+            .avatar-center { width: 80px; height: 80px; }
+            .subtitle-area { font-size: 1rem; padding: 10px 12px; bottom: 40%; }
+            .bottom-bar svg { width: 36px; height: 36px; }
+            .nickname { font-size: 1rem; }
+        }
+        .call-controls {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 0);
+            z-index: 10;
+            transition: top 0.7s cubic-bezier(.4,2,.6,1), bottom 0.7s cubic-bezier(.4,2,.6,1), transform 0.7s cubic-bezier(.4,2,.6,1);
+        }
+        .call-controls.center {
+            top: calc(18% + 120px + 40px);
+            bottom: auto;
+        }
+        .call-controls.bottom {
+            top: auto;
+            bottom: 120px;
+        }
+        .call-btn-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.4s, transform 0.5s cubic-bezier(.4,2,.6,1);
+        }
+        .call-btn-wrapper.hide {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+        .in-call-btns {
+            display: flex;
+            gap: 40px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s, transform 0.5s cubic-bezier(.4,2,.6,1);
+        }
+        .in-call-btns.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .in-call-btns .action-btn {
+            transition: transform 0.6s cubic-bezier(.4,2,.6,1);
+        }
+        .in-call-btns.split .action-btn:first-child {
+            transform: translateX(-60px);
+        }
+        .in-call-btns.split .action-btn:last-child {
+            transform: translateX(60px);
+        }
+        .in-call-btns:not(.split) .action-btn {
+            transform: translateX(0);
+        }
+        /* 呼叫中动画 */
+        .calling-anim {
+            animation: rotateCall 1s linear infinite;
+        }
+        @keyframes rotateCall {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .avatar-center.talking-anim {
+            animation: talkingBounce 0.7s infinite cubic-bezier(.4,1.6,.6,1.1);
+        }
+        @keyframes talkingBounce {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.12); }
+            50% { transform: scale(0.95); }
+            80% { transform: scale(1.10); }
+            100% { transform: scale(1); }
+        }
+        @media (max-width: 600px) {
+            .call-controls.bottom {
+                bottom: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blur" id="bgBlur"></div>
+    <div class="main-content">
+        <div class="top-bar">
+            <button class="icon-btn" id="fullscreenToggle" title="全屏" style="margin-right:auto;">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                  <polyline points="4,9 4,4 9,4" fill="none" stroke="#fff" stroke-width="2"/>
+                  <polyline points="20,9 20,4 15,4" fill="none" stroke="#fff" stroke-width="2"/>
+                  <polyline points="4,15 4,20 9,20" fill="none" stroke="#fff" stroke-width="2"/>
+                  <polyline points="20,15 20,20 15,20" fill="none" stroke="#fff" stroke-width="2"/>
+                </svg>
+            </button>
+            <button class="icon-btn" id="subtitleToggle" title="字幕开关">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                  <text x="4" y="17" font-size="13" font-family="Arial" fill="#fff">CC</text>
+                </svg>
+            </button>
+        </div>
+        <div class="avatar-section">
+            <div class="avatar-center" id="avatarCenter">
+                <img id="avatarImg" src="avatar.png" alt="头像" />
+            </div>
+            <div class="nickname" id="nickname" contenteditable="true">静香</div>
+        </div>
+        <div class="subtitle-area" id="subtitleArea">
+            <!-- 字幕内容 -->
+        </div>
+        <div class="call-controls" id="callControls">
+            <!-- 初始状态：只显示呼叫按钮 -->
+            <div class="call-btn-wrapper" id="callBtnWrapper">
+                <button class="action-btn" id="callBtn">
+                    <svg id="callIcon" viewBox="0 0 24 24"><path fill="#00eaff" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.07 21 3 13.93 3 5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.24 1.01l-2.2 2.2z"/></svg>
+                    <span class="action-label" id="callLabel">呼叫</span>
+                </button>
+            </div>
+            <!-- 通话中状态：显示挂断和麦克风按钮 -->
+            <div class="in-call-btns" id="inCallBtns">
+                <button class="action-btn" id="hangupBtn">
+                    <svg id="hangupIcon" viewBox="0 0 24 24"><path fill="#ff4d4f" d="M21 15.46l-5.27-2.11a1 1 0 0 0-1.11.21l-2.1 2.1a16.06 16.06 0 0 1-6.59-6.59l2.1-2.1a1 1 0 0 0 .21-1.11L8.54 3A1 1 0 0 0 7.46 2H4a1 1 0 0 0-1 1C3 13.93 10.07 21 20 21a1 1 0 0 0 1-1v-3.46a1 1 0 0 0-.99-1.08z"/></svg>
+                    <span class="action-label" id="hangupLabel">挂断</span>
+                </button>
+                <button class="action-btn" id="micBtn">
+                    <svg id="micIcon" viewBox="0 0 24 24"><path fill="#fff" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/></svg>
+                    <span class="action-label" id="micLabel">麦克风已开</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
+    <script>
+    // 变量定义
+    let ws = null;
+    let wsShouldShowError = false;
+    let audioContext = null;
+    let audioSource = null;
+    let scriptNode = null;
+    let mediaStream = null;
+    let isRecording = false;
+    let isMicOn = true;
+    let isCalling = false;
+    let permissionStatus = null;
+    let audioContextForPlayback = null;
+    let audioQueue = [];
+    let isAudioPlaying = false;
+    let lastUserText = '';
+    let lastAIText = '';
+    let subtitleOn = false;
+    let avatarUrl = 'avatar.png';
+    const url = "localhost:9533";
+    // 新增状态机
+    let callState = 'idle'; // idle, calling, inCall
+
+    // DOM元素
+    const callControls = document.getElementById('callControls');
+    const callBtnWrapper = document.getElementById('callBtnWrapper');
+    const inCallBtns = document.getElementById('inCallBtns');
+    const callBtn = document.getElementById('callBtn');
+    const callIcon = document.getElementById('callIcon');
+    const callLabel = document.getElementById('callLabel');
+    const hangupBtn = document.getElementById('hangupBtn');
+    const hangupIcon = document.getElementById('hangupIcon');
+    const hangupLabel = document.getElementById('hangupLabel');
+    const micBtn = document.getElementById('micBtn');
+    const micIcon = document.getElementById('micIcon');
+    const micLabel = document.getElementById('micLabel');
+    const subtitleToggle = document.getElementById('subtitleToggle');
+    const subtitleArea = document.getElementById('subtitleArea');
+    const avatarImg = document.getElementById('avatarImg');
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarChange = document.getElementById('avatarChange');
+    const bgBlur = document.getElementById('bgBlur');
+    const avatarCenter = document.getElementById('avatarCenter');
+    const nickname = document.getElementById('nickname');
+    const fullscreenToggle = document.getElementById('fullscreenToggle');
+
+    // 昵称编辑逻辑
+    nickname.addEventListener('blur', function() {
+        if (!this.textContent.trim()) {
+            this.textContent = '哟呵少女';
+        }
+    });
+
+    nickname.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            this.blur();
+        }
+    });
+
+    // 字幕开关逻辑
+    subtitleToggle.onclick = function() {
+        subtitleOn = !subtitleOn;
+        if (subtitleOn) {
+            subtitleArea.classList.add('on');
+            subtitleToggle.classList.add('active');
+            updateSubtitle(lastUserText, lastAIText);
+        } else {
+            subtitleArea.classList.remove('on');
+            subtitleToggle.classList.remove('active');
+            // 等待动画完成后清空内容
+            setTimeout(() => {
+                if (!subtitleOn) {  // 再次检查状态，避免快速切换导致的问题
+                    subtitleArea.innerHTML = '';
+                }
+            }, 300);
+        }
+    };
+
+    // 头像更换逻辑
+    avatarCenter.onclick = function() {
+        avatarInput.click();
+    };
+    avatarInput.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            avatarUrl = evt.target.result;
+            avatarImg.src = avatarUrl;
+            bgBlur.style.background = `url('${avatarUrl}') center/cover no-repeat`;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    // 按钮状态切换动画
+    function updateCallControls() {
+        if (callState === 'idle') {
+            callControls.classList.add('center');
+            callControls.classList.remove('bottom');
+            callBtnWrapper.classList.remove('hide');
+            inCallBtns.classList.remove('show', 'split');
+            callBtn.disabled = false;
+            callIcon.classList.remove('calling-anim');
+            callLabel.textContent = '呼叫';
+            callLabel.style.color = '#00eaff';
+        } else if (callState === 'calling') {
+            callControls.classList.add('center');
+            callControls.classList.remove('bottom');
+            callBtnWrapper.classList.remove('hide');
+            inCallBtns.classList.remove('show', 'split');
+            callBtn.disabled = true;
+            callIcon.classList.add('calling-anim');
+            callLabel.textContent = '呼叫中...';
+            callLabel.style.color = '#ffd700';
+        } else if (callState === 'inCall-pre') {
+            // 下移到底部但不分裂
+            callControls.classList.remove('center');
+            callControls.classList.add('bottom');
+            callBtnWrapper.classList.add('hide');
+            inCallBtns.classList.add('show');
+            inCallBtns.classList.remove('split');
+            callBtn.disabled = false;
+            callIcon.classList.remove('calling-anim');
+        } else if (callState === 'inCall') {
+            // 分裂动画
+            callControls.classList.remove('center');
+            callControls.classList.add('bottom');
+            callBtnWrapper.classList.add('hide');
+            inCallBtns.classList.add('show', 'split');
+            callBtn.disabled = false;
+            callIcon.classList.remove('calling-anim');
+        }
+    }
+
+    // 初始只显示呼叫按钮
+    updateCallControls();
+
+    // 动画统一函数 direction: 'down'（呼叫） | 'up'（挂断）
+    function animateCallTransition(direction, callback) {
+        if (direction === 'down') {
+            // 呼叫：下移到底部，再分裂
+            callControls.classList.remove('center');
+            callControls.classList.add('bottom');
+            callBtnWrapper.classList.add('hide');
+            inCallBtns.classList.add('show');
+            setTimeout(() => {
+                inCallBtns.classList.add('split');
+                if (callback) setTimeout(callback, 300); // 分裂动画
+            }, 400); // 下移动画
+        } else {
+            // 挂断：先合并，再淡出/淡入，再上移
+            inCallBtns.classList.remove('split');
+            setTimeout(() => {
+                // 两按钮淡出，呼叫按钮淡入（都在底部）
+                inCallBtns.classList.remove('show');
+                callBtnWrapper.classList.remove('hide');
+                // 修正：动画期间直接设置呼叫按钮内容为"呼叫"
+                callLabel.textContent = '呼叫';
+                callLabel.style.color = '#00eaff';
+                callIcon.classList.remove('calling-anim');
+                setTimeout(() => {
+                    // 只有呼叫按钮时整体上移
+                    callControls.classList.remove('bottom');
+                    callControls.classList.add('center');
+                    if (callback) setTimeout(callback, 400); // 上移动画
+                }, 300); // 淡出/淡入动画
+            }, 250); // 合并动画
+        }
+    }
+
+    // 呼叫按钮点击
+    callBtn.onclick = function() {
+        if (callState !== 'idle') return;
+        callState = 'calling';
+        updateCallControls();
+        // 仅显示呼叫中动画，不下移和分裂，等待ws连接结果
+        startCall();
+    };
+    // 挂断按钮点击
+    hangupBtn.onclick = function() {
+        if (callState !== 'inCall') return;
+        stopCall();
+        animateCallTransition('up', () => {
+            callState = 'idle';
+            updateCallControls();
+        });
+    };
+    // 麦克风按钮逻辑
+    micBtn.onclick = function() {
+        if (callState !== 'inCall') return; // 仅通话中可切换
+        isMicOn = !isMicOn;
+        updateMicUI();
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            if (isMicOn) {
+                startRecording(); // 重新开始录音
+            } else {
+                stopRecording(); // 停止录音
+            }
+        }
+    };
+    function updateMicUI() {
+        if (isMicOn) {
+            micIcon.innerHTML = '<path fill="#fff" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>';
+            micLabel.textContent = '麦克风已开';
+            micLabel.style.color = '#fff';
+        } else {
+            micIcon.innerHTML = '<path fill="#ff4d4f" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>';
+            micLabel.textContent = '麦克风已关';
+            micLabel.style.color = '#ff4d4f';
+        }
+    }
+
+    // 字幕内容更新
+    function updateSubtitle(userText, aiText) {
+        if (!subtitleOn) return;
+        
+        subtitleArea.innerHTML = '';
+        if (userText) {
+            const userDiv = document.createElement('div');
+            userDiv.className = 'subtitle-user';
+            userDiv.textContent = userText;
+            subtitleArea.appendChild(userDiv);
+        }
+        if (aiText) {
+            const aiDiv = document.createElement('div');
+            aiDiv.className = 'subtitle-ai';
+            aiDiv.textContent = aiText;
+            subtitleArea.appendChild(aiDiv);
+        }
+    }
+
+    // 权限检测
+    async function checkMicrophonePermission() {
+        try {
+            if (navigator.permissions && navigator.permissions.query) {
+                permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+                return permissionStatus.state;
+            }
+            return 'unknown';
+        } catch (e) {
+            return 'unknown';
+        }
+    }
+
+    // WebSocket相关
+    function startCall() {
+        if (isCalling) return;
+        wsShouldShowError = true;
+        ws = new WebSocket(`ws://${url}/ws`);
+        ws.onopen = () => {
+            isCalling = true;
+            wsShouldShowError = false;
+            animateCallTransition('down', () => {
+                callState = 'inCall';
+                updateCallControls();
+                startRecording();
+            });
+        };
+        ws.onclose = () => {
+            isCalling = false;
+            updateCallControls();
+            stopRecording();
+            if (wsShouldShowError) {
+                alert('通话连接失败，请检查网络或服务端状态');
+            }
+            callState = 'idle';
+            updateCallControls();
+        };
+        ws.onerror = () => {
+            isCalling = false;
+            updateCallControls();
+            stopRecording();
+            if (wsShouldShowError) {
+                alert('通话连接失败，请检查网络或服务端状态');
+                wsShouldShowError = false;
+            }
+            callState = 'idle';
+            updateCallControls();
+        };
+        ws.onmessage = async (event) => {
+            if (event.data instanceof Blob) {
+                // AI语音回复
+                const arrayBuffer = await event.data.arrayBuffer();
+                const audioData = new Int16Array(arrayBuffer);
+                audioQueue.push(audioData);
+                if (!isAudioPlaying) {
+                    processAudioQueue();
+                }
+            } else {
+                const data = JSON.parse(event.data);
+                if (data.type === 'asr') {
+                    lastUserText = data.text;
+                    if (data.isEnd) {
+                        lastUserText = data.text;
+                    }
+                    updateSubtitle(lastUserText, lastAIText);
+                } else if (data.type === 'chat') {
+                    lastAIText = data.text;
+                    updateSubtitle(lastUserText, lastAIText);
+                }
+            }
+        };
+    }
+    function stopCall() {
+        if (ws) {
+            wsShouldShowError = false;
+            ws.close();
+            ws = null;
+        }
+        isCalling = false;
+        isMicOn = true; // 挂断后自动重置麦克风为开
+        updateMicUI();
+        updateCallControls();
+        stopRecording();
+        lastUserText = '';
+        lastAIText = '';
+        updateSubtitle('', '');
+    }
+
+    // 录音相关
+    async function startRecording() {
+        if (!isMicOn) return;
+        const permissionState = await checkMicrophonePermission();
+        if (permissionState === 'denied') {
+            alert('麦克风权限被拒绝，请检查浏览器设置');
+            return;
+        }
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send("start");
+        }
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true,
+                channelCount: 1,
+                sampleRate: 16000
+            }
+        });
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+        }
+        audioSource = audioContext.createMediaStreamSource(stream);
+        mediaStream = stream;
+        const bufferSize = 4096;
+        scriptNode = audioContext.createScriptProcessor(bufferSize, 1, 1);
+        scriptNode.onaudioprocess = (audioProcessingEvent) => {
+            if (!isRecording || !isMicOn) return;
+            const inputData = audioProcessingEvent.inputBuffer.getChannelData(0);
+            const pcmData = new Int16Array(inputData.length);
+            for (let i = 0; i < inputData.length; i++) {
+                pcmData[i] = Math.max(-1, Math.min(1, inputData[i])) * 0x7FFF;
+            }
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(pcmData.buffer);
+            }
+        };
+        audioSource.connect(scriptNode);
+        scriptNode.connect(audioContext.destination);
+        isRecording = true;
+    }
+    function stopRecording() {
+        isRecording = false;
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send("stop");
+        }
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+            mediaStream = null;
+        }
+        if (audioSource) {
+            audioSource.disconnect();
+            audioSource = null;
+        }
+        if (scriptNode) {
+            scriptNode.disconnect();
+            scriptNode = null;
+        }
+        if (audioContext && audioContext.state !== 'closed') {
+            audioContext.close().then(() => {
+                audioContext = null;
+            });
+        }
+    }
+
+    // AI语音播放及头像波动动画
+    async function playAudioFrame(audioData) {
+        return new Promise((resolve) => {
+            try {
+                if (!audioContextForPlayback) {
+                    audioContextForPlayback = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+                }
+                // 头像弹跳动画
+                avatarCenter.classList.add('talking-anim');
+                let int16Data = audioData instanceof Int16Array ? audioData : new Int16Array(audioData);
+                const float32Data = new Float32Array(int16Data.length);
+                for (let i = 0; i < int16Data.length; i++) {
+                    float32Data[i] = int16Data[i] / 32768.0;
+                }
+                const audioBuffer = audioContextForPlayback.createBuffer(1, float32Data.length, 16000);
+                audioBuffer.getChannelData(0).set(float32Data);
+                const source = audioContextForPlayback.createBufferSource();
+                source.buffer = audioBuffer;
+                source.playbackRate.value = 1.0;
+                source.connect(audioContextForPlayback.destination);
+                isAudioPlaying = true;
+                source.start();
+                source.onended = () => {
+                    isAudioPlaying = false;
+                    avatarCenter.classList.remove('talking-anim');
+                    resolve();
+                };
+            } catch (e) {
+                avatarCenter.classList.remove('talking-anim');
+                resolve();
+            }
+        });
+    }
+    async function processAudioQueue() {
+        while (audioQueue.length > 0) {
+            const audioData = audioQueue.shift();
+            await playAudioFrame(audioData);
+        }
+    }
+
+    // 全屏切换逻辑
+    fullscreenToggle.onclick = function() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    };
+
+    // 初始化
+    isMicOn = true;
+    updateCallControls();
+    updateMicUI();
+    </script>
+</body>
+</html>
