@@ -47,7 +47,7 @@ public class ChatClientConfig {
 
     @Bean
     ChatClient chatClient(ChatClient.Builder builder) {
-        ClassPathResource resource = new ClassPathResource("static/prompt/localization2.txt");
+        ClassPathResource resource = new ClassPathResource("static/prompt/localization.txt");
         if (resource.exists()) {
             log.info("使用prompt文件：{}", "localization.txt");
             try (InputStream inputStream = resource.getInputStream()) {
