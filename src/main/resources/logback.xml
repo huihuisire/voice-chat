@@ -13,10 +13,10 @@
     
     <!-- 按照每天生成日志文件 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/voice-chat4j.log</file>
+        <file>${LOG_HOME}/voice-chat.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志文件输出的文件名 -->
-            <fileNamePattern>${LOG_HOME}/voice-chat4j.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/voice-chat.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- 日志文件保留天数 -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
