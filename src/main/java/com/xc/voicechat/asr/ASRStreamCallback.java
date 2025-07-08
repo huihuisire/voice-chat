@@ -1,4 +1,4 @@
-package com.xc.voicechat4j.asr;
+package com.xc.voicechat.asr;
 
 import com.alibaba.dashscope.audio.asr.recognition.RecognitionResult;
 

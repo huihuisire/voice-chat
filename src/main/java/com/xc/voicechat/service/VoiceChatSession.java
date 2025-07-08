@@ -1,12 +1,12 @@
-package com.xc.voicechat4j.service;
+package com.xc.voicechat.service;
 
 import com.alibaba.dashscope.audio.asr.recognition.RecognitionResult;
-import com.xc.voicechat4j.asr.ASRService;
-import com.xc.voicechat4j.asr.ASRStreamCallback;
-import com.xc.voicechat4j.config.VoiceChatConfig;
-import com.xc.voicechat4j.entity.ASRMessage;
-import com.xc.voicechat4j.tts.TTService;
-import com.xc.voicechat4j.util.MessageHandler;
+import com.xc.voicechat.asr.ASRService;
+import com.xc.voicechat.asr.ASRStreamCallback;
+import com.xc.voicechat.config.VoiceChatConfig;
+import com.xc.voicechat.entity.ASRMessage;
+import com.xc.voicechat.tts.TTService;
+import com.xc.voicechat.util.MessageHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.socket.TextMessage;

@@ -1,7 +1,7 @@
-package com.xc.voicechat4j.websocket;
+package com.xc.voicechat.websocket;
 
-import com.xc.voicechat4j.config.VoiceChatConfig;
-import com.xc.voicechat4j.service.VoiceChatSessionManager;
+import com.xc.voicechat.config.VoiceChatConfig;
+import com.xc.voicechat.service.VoiceChatSessionManager;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;

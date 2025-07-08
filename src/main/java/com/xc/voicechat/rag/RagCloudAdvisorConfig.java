@@ -1,4 +1,4 @@
-package com.xc.voicechat4j.rag;
+package com.xc.voicechat.rag;
 
 import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
 import com.alibaba.cloud.ai.dashscope.rag.DashScopeDocumentRetriever;

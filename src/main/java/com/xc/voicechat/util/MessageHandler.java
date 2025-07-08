@@ -1,7 +1,7 @@
-package com.xc.voicechat4j.util;
+package com.xc.voicechat.util;
 
-import com.xc.voicechat4j.config.VoiceChatConfig;
-import com.xc.voicechat4j.entity.ChatMessage;
+import com.xc.voicechat.config.VoiceChatConfig;
+import com.xc.voicechat.entity.ChatMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.BinaryMessage;

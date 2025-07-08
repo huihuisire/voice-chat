@@ -1,6 +1,6 @@
-package com.xc.voicechat4j.config;
+package com.xc.voicechat.config;
 
-import com.xc.voicechat4j.websocket.VoiceChatWebSocketHandler;
+import com.xc.voicechat.websocket.VoiceChatWebSocketHandler;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;

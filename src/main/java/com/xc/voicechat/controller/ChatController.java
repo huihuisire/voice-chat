@@ -1,4 +1,4 @@
-package com.xc.voicechat4j.controller;
+package com.xc.voicechat.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;

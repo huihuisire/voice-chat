@@ -1,4 +1,4 @@
-package com.xc.voicechat4j.entity;
+package com.xc.voicechat.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.xc</groupId>
-    <artifactId>voice-chat4j</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>voice-chat4j</name>
-    <description>voice-chat4j</description>
+    <artifactId>voice-chat</artifactId>
+    <version>1.0.0</version>
+    <name>voice-chat</name>
+    <description>voice-chat</description>
     <url/>
     <licenses>
         <license/>

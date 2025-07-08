@@ -1,4 +1,4 @@
-package com.xc.voicechat4j.client;
+package com.xc.voicechat.client;
 
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
 import jakarta.annotation.Resource;

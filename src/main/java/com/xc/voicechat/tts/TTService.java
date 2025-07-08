@@ -1,9 +1,9 @@
-package com.xc.voicechat4j.tts;
+package com.xc.voicechat.tts;
 
 import com.alibaba.dashscope.audio.ttsv2.SpeechSynthesisAudioFormat;
 import com.alibaba.dashscope.audio.ttsv2.SpeechSynthesisParam;
 import com.alibaba.dashscope.audio.ttsv2.SpeechSynthesizer;
-import com.xc.voicechat4j.config.VoiceChatConfig;
+import com.xc.voicechat.config.VoiceChatConfig;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,8 +1,8 @@
-package com.xc.voicechat4j.asr;
+package com.xc.voicechat.asr;
 
 import com.alibaba.dashscope.audio.asr.recognition.Recognition;
 import com.alibaba.dashscope.audio.asr.recognition.RecognitionParam;
-import com.xc.voicechat4j.config.VoiceChatConfig;
+import com.xc.voicechat.config.VoiceChatConfig;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.PublishProcessor;
 import lombok.Setter;

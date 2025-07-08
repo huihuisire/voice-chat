@@ -1,4 +1,4 @@
-package com.xc.voicechat4j;
+package com.xc.voicechat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,10 +11,10 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
 
 @SpringBootApplication
-public class VoiceChat4jApplication {
+public class VoiceChatApplication {
 
     public static void main(String[] args) {
-        ConfigurableEnvironment env = SpringApplication.run(VoiceChat4jApplication.class, args).getEnvironment();
+        ConfigurableEnvironment env = SpringApplication.run(VoiceChatApplication.class, args).getEnvironment();
 
         String serverPort = env.getProperty("server.port");
         String web = String.format("Access Url :http://localhost:%s", serverPort);

@@ -1,4 +1,4 @@
-package com.xc.voicechat4j.config;
+package com.xc.voicechat.config;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,8 +1,8 @@
-package com.xc.voicechat4j.service;
+package com.xc.voicechat.service;
 
-import com.xc.voicechat4j.entity.ChatMessage;
-import com.xc.voicechat4j.tts.TTService;
-import com.xc.voicechat4j.util.MessageHandler;
+import com.xc.voicechat.entity.ChatMessage;
+import com.xc.voicechat.tts.TTService;
+import com.xc.voicechat.util.MessageHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;

@@ -16,10 +16,10 @@ spring:
             voice: longwan
             speed: 0.9
   application:
-    name: voice-chat4j
+    name: voice-chat
 
 
 logging:
   level:
-    com.xc.voicechat4j: INFO
+    com.xc.voicechat: INFO
     org.springframework.web: INFO
